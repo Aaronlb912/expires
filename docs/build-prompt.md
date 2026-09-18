@@ -5,7 +5,7 @@ See what is due in 30 days. Keep more than one paper. JSON in,
 JSON out. Drop `src/lib/` into a React app you already have.
 
 Prompt file (do not wait for a paste):
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\draft-30-prompt.md`
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-rebuild-prompt.md`
 
 Continue later:
 `C:\Users\aaron\OneDrive\Documents\prompts\multi-session-build-prompt-react.md`
@@ -37,27 +37,26 @@ names. Email on `.example`.
 - [x] E-A. Mailer, not a card. Late paper is a letter.
 - [x] E-B. Renew. Roll `expires` by `termMonths`, write
       `previousExpires`.
-- [ ] E-C. Ref. Plate / policy / domain. Notice + find.
-- [ ] E-D. Due window. 14 / 30 / 60 on the book.
-- [ ] E-E. Hold. `holdUntil` moves a late paper to Later.
-- [ ] E-F. Due list by kind when no chip is on.
-- [ ] E-G. Print this notice / due list. Chrome gone.
-- [ ] E-H. Keyboard. j/k or arrows. Enter opens.
-- [ ] E-I. Paper page is the notice. Cost optional.
-- [ ] E-J. Empty and late-where.
-- [ ] E-K. Application CSS. Mailer hierarchy. 390. Print.
+- [x] R-0. TARGET points at the rebuild prompt.
+- [x] R-1. New clerk shell.
+- [x] R-2. Late letter in the new shell.
+- [x] R-3. Due tray, 14 / 30 / 60, Later.
+- [x] R-4. Registration card. Renew. Cost.
+- [x] R-5. Hold, empty, late-where.
+- [x] R-6. Keyboard and print.
+- [x] R-7. Application CSS. 390. Print.
 - [ ] Session ship: screenshots, demo video, README Demo, LinkedIn
       draft, SHIPPED.
 
 ## This session
 
-E-A mailer letter. E-B Renew. Do not ship.
+Rebuild R-0 through R-7. Clerk shell, late letter kept.
+Do not ship.
 
 ## Next session
 
-Draft 30. Open this repo. Read
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\draft-30-prompt.md`.
-Next unchecked expires letter (E-C). Do not ship.
+Rebuild letters are done. Ship later only when he asks.
+Do not start the video. Do not mark SHIPPED.
 
 ## Usefulness check
 

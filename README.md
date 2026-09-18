@@ -23,7 +23,7 @@ npm start
 
 Open http://127.0.0.1:48417/
 
-Late papers sit on the desk as a mailed notice. Good thru is
-the date. Renew rolls the term. Due in 30 days is a list.
-Later stays folded. Add a paper. Open one. Download JSON
-from More.
+Late papers sit as a mailed notice. The rest of the page is
+the clerk desk: find, due tray, later file. Open a paper to
+get the registration card. Renew rolls the term. JSON is
+under File.

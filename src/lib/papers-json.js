@@ -37,15 +37,22 @@ export function daysUntil(expireValue, now = new Date()) {
   return Math.round((to - from) / 86400000)
 }
 
-export function dueBucket(expireValue, now = new Date()) {
+export function dueWindowOf(value) {
+  const days = Number(value)
+  if (days === 14 || days === 60) return days
+  return 30
+}
+
+export function dueBucket(expireValue, now = new Date(), windowDays = 30) {
   const days = daysUntil(expireValue, now)
   if (days == null) return 'miss'
   if (days < 0) return 'late'
-  if (days <= 30) return 'soon'
+  const window = dueWindowOf(windowDays)
+  if (days <= window) return 'soon'
   return 'later'
 }
 
-export function dueLabel(expireValue, now = new Date()) {
+export function dueLabel(expireValue, now = new Date(), windowDays = 30) {
   const days = daysUntil(expireValue, now)
   if (days == null) return 'Needs a date'
   if (days < 0) {
@@ -54,8 +61,13 @@ export function dueLabel(expireValue, now = new Date()) {
   }
   if (days === 0) return 'Due today'
   if (days === 1) return 'Due tomorrow'
-  if (days <= 30) return `Due in ${days} days`
+  if (days <= dueWindowOf(windowDays)) return `Due in ${days} days`
   return formatExpire(expireValue)
+}
+
+export function isHeld(paper, now = new Date()) {
+  const days = daysUntil(paper && paper.holdUntil, now)
+  return days != null && days >= 0
 }
 
 export function formatExpire(value) {
@@ -121,13 +133,14 @@ function rankPaper(paper, now = new Date()) {
   return days
 }
 
-export function splitPapers(papers, now = new Date()) {
+export function splitPapers(papers, now = new Date(), windowDays = 30) {
   const late = []
   const soon = []
   const rest = []
   papers.forEach((paper) => {
-    const bucket = dueBucket(paper.expires, now)
-    if (bucket === 'later') rest.push(paper)
+    const bucket = dueBucket(paper.expires, now, windowDays)
+    if (bucket === 'late' && isHeld(paper, now)) rest.push(paper)
+    else if (bucket === 'later') rest.push(paper)
     else if (bucket === 'late') late.push(paper)
     else soon.push(paper)
   })
@@ -135,6 +148,23 @@ export function splitPapers(papers, now = new Date()) {
   soon.sort((left, right) => rankPaper(left, now) - rankPaper(right, now) || left.name.localeCompare(right.name))
   rest.sort((left, right) => rankPaper(left, now) - rankPaper(right, now) || left.name.localeCompare(right.name))
   return { late, soon, rest }
+}
+
+export function groupByKind(papers) {
+  const groups = []
+  const seen = new Map()
+  papers.forEach((paper) => {
+    const label = String(paper.kind || 'paper').trim() || 'paper'
+    const key = label.toLowerCase()
+    if (!seen.has(key)) {
+      const group = { kind: label, papers: [] }
+      seen.set(key, group)
+      groups.push(group)
+    }
+    seen.get(key).papers.push(paper)
+  })
+  groups.sort((left, right) => left.kind.localeCompare(right.kind))
+  return groups
 }
 
 export function kindsFrom(papers) {
@@ -154,7 +184,7 @@ export function paperMatches(paper, query, kind) {
   }
   const needle = String(query || '').trim().toLowerCase()
   if (!needle) return true
-  const hay = [paper.name, paper.kind, paper.where, paper.issuer, paper.notes]
+  const hay = [paper.name, paper.kind, paper.where, paper.issuer, paper.notes, paper.ref]
     .join(' ')
     .toLowerCase()
   return hay.includes(needle)
@@ -175,17 +205,19 @@ export function parseBookText(text) {
   }
 }
 
-function asCost(value) {
-  if (value === '' || value == null) return ''
-  const n = Number(value)
-  if (Number.isFinite(n)) return n
-  return String(value).trim()
+export function parseCost(value) {
+  if (value === '' || value == null) return { ok: true, value: '' }
+  const raw = String(value).trim()
+  if (!raw) return { ok: true, value: '' }
+  const n = Number(raw)
+  if (!Number.isFinite(n) || n < 0) return { ok: false, reason: 'junk' }
+  return { ok: true, value: n }
 }
 
-function dueWindowOf(value) {
-  const days = Number(value)
-  if (days === 14 || days === 60) return days
-  return 30
+function asCost(value) {
+  const parsed = parseCost(value)
+  if (parsed.ok) return parsed.value
+  return String(value).trim()
 }
 
 export function normalizePaper(paper, index = 0) {

@@ -76,5 +76,6 @@ export function sampleEmptyBook() {
   return {
     title: 'Pell Street Motors',
     papers: [],
+    dueWindowDays: 30,
   }
 }

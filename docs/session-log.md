@@ -31,3 +31,13 @@ stamp. Good thru in display type. Name, ref, kind, issuer,
 late-by. Open is the letter. Renew adds the term (default
 12) and keeps the previous date. Old JSON still loads.
 Next session: E-C Ref. Do not ship.
+
+## 2026-09-18 - Rebuild R-0 to R-7
+
+What runs: http://127.0.0.1:48417/
+What landed: Clerk shell on a slate counter. Late letter kept
+(stamp, huge Good thru). Due tray is date-first and grouped by
+kind. 14 / 30 / 60. Later folded. Open paper is a registration
+card. Renew, hold, ref find, cost miss, blank notice. j/k and
+print hide chrome. 390 keeps the date.
+Next session: ready for ship later. Do not ship from this prompt.
