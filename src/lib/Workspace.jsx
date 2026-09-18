@@ -1,31 +1,72 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PaperPage } from './PaperPage.jsx'
 import { sampleBook } from './sample-papers.js'
 import {
+  blankBook,
   blankPaper,
+  daysUntil,
   downloadBook,
   dueBucket,
-  dueLabel,
-  normalizeBook,
+  duplicatePaper,
+  formatExpire,
+  formatMailerDate,
+  kindsFrom,
+  paperMatches,
+  parseBookText,
   splitPapers,
 } from './papers-json.js'
 import './expires.css'
 
 export function Workspace({ value, onChange }) {
   const undoTimer = useRef(null)
+  const fileRef = useRef(null)
+  const searchRef = useRef(null)
   const [openId, setOpenId] = useState('')
   const [draft, setDraft] = useState(null)
   const [undo, setUndo] = useState(null)
+  const [query, setQuery] = useState('')
+  const [kind, setKind] = useState('')
+  const [showLater, setShowLater] = useState(false)
+  const [loadMiss, setLoadMiss] = useState('')
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [titleDraft, setTitleDraft] = useState(value.title)
+
   const open = value.papers.find((paper) => paper.id === openId) || null
-  const { soon, rest } = splitPapers(value.papers)
+  const kinds = kindsFrom(value.papers)
+  const visible = value.papers.filter((paper) => paperMatches(paper, query, kind))
+  const { late, soon, rest } = splitPapers(visible)
+
+  useEffect(() => {
+    function onKey(event) {
+      if (event.target.closest('input, textarea, select')) return
+      if (event.key === 'n') {
+        event.preventDefault()
+        addPaper()
+      }
+      if (event.key === '/') {
+        event.preventDefault()
+        searchRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   function setPapers(papers) {
     onChange({ ...value, papers })
   }
 
+  function saveTitle() {
+    const next = titleDraft.trim() || 'Papers'
+    setTitleDraft(next)
+    setEditingTitle(false)
+    if (next !== value.title) onChange({ ...value, title: next })
+  }
+
   function addPaper() {
     setUndo(null)
     setOpenId('')
+    setLoadMiss('')
     setDraft(blankPaper())
   }
 
@@ -33,17 +74,31 @@ export function Workspace({ value, onChange }) {
     setUndo(null)
     setOpenId('')
     setDraft(null)
-    onChange(normalizeBook(sampleBook()))
+    setQuery('')
+    setKind('')
+    setLoadMiss('')
+    onChange(sampleBook())
   }
 
-  function savePaper(next) {
+  function startBlank() {
+    setUndo(null)
+    setOpenId('')
+    setDraft(null)
+    setQuery('')
+    setKind('')
+    setLoadMiss('')
+    onChange(blankBook())
+  }
+
+  function savePaper(next, stay) {
     if (draft) {
       setPapers([...value.papers, next])
       setDraft(null)
+      if (stay) setOpenId(next.id)
       return
     }
     setPapers(value.papers.map((paper) => (paper.id === next.id ? next : paper)))
-    setOpenId('')
+    if (!stay) setOpenId('')
   }
 
   function cancelPaper() {
@@ -76,42 +131,124 @@ export function Workspace({ value, onChange }) {
     setUndo(null)
   }
 
+  function copyPaper(paper) {
+    setUndo(null)
+    setOpenId('')
+    setDraft(duplicatePaper(paper))
+  }
+
+  function onPickFile(event) {
+    const file = event.target.files && event.target.files[0]
+    event.target.value = ''
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const parsed = parseBookText(String(reader.result || ''))
+      if (!parsed.ok) {
+        setLoadMiss('That file is not a papers JSON.')
+        return
+      }
+      setLoadMiss('')
+      setUndo(null)
+      setOpenId('')
+      setDraft(null)
+      onChange(parsed.book)
+    }
+    reader.onerror = () => setLoadMiss('Could not read that file.')
+    reader.readAsText(file)
+  }
+
   if (draft || open) {
     const paper = draft || open
     return (
       <PaperPage
         paper={paper}
         mode={draft ? 'new' : 'edit'}
+        kinds={kinds}
         onSave={savePaper}
+        onKeep={(next) => savePaper(next, true)}
         onCancel={cancelPaper}
         onRemove={draft ? undefined : () => removePaper(paper.id)}
+        onDuplicate={draft ? undefined : () => copyPaper(paper)}
       />
     )
   }
 
+  const filteredEmpty = value.papers.length > 0 && visible.length === 0
+  const filtering = Boolean(query || kind)
+
   return (
     <div className="ex">
-      <header className="ex-top">
-        <div>
-          <p className="ex-kicker">Expires</p>
-          <h1>{value.title}</h1>
-          <p className="ex-note">
-            Papers that die on a date. Due in 30 days is at the top.
-            Names are fake. Emails end in .example.
-          </p>
-        </div>
-        <div className="ex-actions">
+      <header className="ex-mast">
+        {editingTitle ? (
+          <input
+            className="ex-title-input"
+            value={titleDraft}
+            onChange={(event) => setTitleDraft(event.target.value)}
+            onBlur={saveTitle}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') saveTitle()
+              if (event.key === 'Escape') {
+                setTitleDraft(value.title)
+                setEditingTitle(false)
+              }
+            }}
+            autoFocus
+            aria-label="Book title"
+          />
+        ) : (
+          <h1>
+            <button
+              type="button"
+              className="ex-title-btn"
+              onClick={() => {
+                setTitleDraft(value.title)
+                setEditingTitle(true)
+              }}
+            >
+              {value.title}
+            </button>
+          </h1>
+        )}
+        <div className="ex-mast-actions">
           <button type="button" onClick={addPaper}>
-            Add a paper
+            Add paper
           </button>
-          <button type="button" className="ex-secondary" onClick={resetSample}>
-            Reset sample
-          </button>
-          <button type="button" className="ex-secondary" onClick={() => downloadBook(value)}>
-            Download JSON
-          </button>
+          <details className="ex-more">
+            <summary>More</summary>
+            <div className="ex-more-panel">
+              <button type="button" className="ex-quiet" onClick={() => window.print()}>
+                Print
+              </button>
+              <button type="button" className="ex-quiet" onClick={() => downloadBook(value)}>
+                Download JSON
+              </button>
+              <button
+                type="button"
+                className="ex-quiet"
+                onClick={() => fileRef.current && fileRef.current.click()}
+              >
+                Load JSON
+              </button>
+              <button type="button" className="ex-quiet" onClick={startBlank}>
+                Start blank
+              </button>
+              <button type="button" className="ex-quiet" onClick={resetSample}>
+                Reset sample
+              </button>
+            </div>
+          </details>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json,.json"
+            hidden
+            onChange={onPickFile}
+          />
         </div>
       </header>
+
+      {loadMiss ? <p className="ex-miss" role="alert">{loadMiss}</p> : null}
 
       {undo ? (
         <p className="ex-undo">
@@ -124,70 +261,154 @@ export function Workspace({ value, onChange }) {
 
       {value.papers.length === 0 ? (
         <div className="ex-empty">
-          <p>No papers yet.</p>
-          <p>Add one, or reset the Pell Street Motors sample.</p>
+          <p>No papers in this book.</p>
           <button type="button" onClick={addPaper}>
-            Add a paper
+            Add paper
           </button>
         </div>
       ) : (
         <>
-          <section className="ex-section" aria-labelledby="ex-soon">
-            <h2 id="ex-soon">Due in 30 days</h2>
-            {soon.length === 0 ? (
-              <p className="ex-quiet-note">Nothing due in the next 30 days.</p>
-            ) : (
-              <ul className="ex-list">
-                {soon.map((paper) => (
-                  <PaperCard
-                    key={paper.id}
-                    paper={paper}
-                    onOpen={() => setOpenId(paper.id)}
-                    onRemove={() => removePaper(paper.id)}
-                  />
+          <div className="ex-find">
+            <input
+              ref={searchRef}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Find a paper"
+              aria-label="Find"
+            />
+            {kinds.length > 0 ? (
+              <div className="ex-kinds" role="group" aria-label="Kind">
+                <button
+                  type="button"
+                  className={kind === '' ? 'ex-chip is-on' : 'ex-chip'}
+                  onClick={() => setKind('')}
+                >
+                  All
+                </button>
+                {kinds.map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    className={kind.toLowerCase() === item.toLowerCase() ? 'ex-chip is-on' : 'ex-chip'}
+                    onClick={() => setKind(kind.toLowerCase() === item.toLowerCase() ? '' : item)}
+                  >
+                    {item}
+                  </button>
                 ))}
-              </ul>
-            )}
-          </section>
+              </div>
+            ) : null}
+          </div>
 
-          <section className="ex-section" aria-labelledby="ex-later">
-            <h2 id="ex-later">Later</h2>
-            {rest.length === 0 ? (
-              <p className="ex-quiet-note">Nothing further out.</p>
-            ) : (
-              <ul className="ex-list">
-                {rest.map((paper) => (
-                  <PaperCard
-                    key={paper.id}
-                    paper={paper}
-                    onOpen={() => setOpenId(paper.id)}
-                    onRemove={() => removePaper(paper.id)}
-                  />
-                ))}
-              </ul>
-            )}
-          </section>
+          {filteredEmpty ? (
+            <div className="ex-empty">
+              <p>Nothing matches.</p>
+              <button
+                type="button"
+                className="ex-secondary"
+                onClick={() => {
+                  setQuery('')
+                  setKind('')
+                }}
+              >
+                Clear find
+              </button>
+            </div>
+          ) : (
+            <>
+              {late.length > 0 ? (
+                <section className="ex-notices" aria-label="Late">
+                  {late.map((paper) => (
+                    <Notice
+                      key={paper.id}
+                      paper={paper}
+                      onOpen={() => setOpenId(paper.id)}
+                    />
+                  ))}
+                </section>
+              ) : !filtering ? (
+                <p className="ex-all-clear">Nothing late.</p>
+              ) : null}
+
+              {soon.length > 0 ? (
+                <section className="ex-due-list" aria-labelledby="ex-soon">
+                  <h2 id="ex-soon">Due in 30 days</h2>
+                  <DueTable papers={soon} onOpen={setOpenId} />
+                </section>
+              ) : null}
+
+              {rest.length > 0 ? (
+                <section className="ex-later" aria-labelledby="ex-later">
+                  <h2 id="ex-later">
+                    <button
+                      type="button"
+                      className="ex-later-toggle"
+                      onClick={() => setShowLater((on) => !on)}
+                    >
+                      Later ({rest.length})
+                    </button>
+                  </h2>
+                  {showLater || filtering ? (
+                    <DueTable papers={rest} onOpen={setOpenId} />
+                  ) : null}
+                </section>
+              ) : null}
+            </>
+          )}
         </>
       )}
     </div>
   )
 }
 
-function PaperCard({ paper, onOpen, onRemove }) {
-  const bucket = dueBucket(paper.expires)
+function lateLine(paper) {
+  const days = daysUntil(paper.expires)
+  if (days == null) return 'Needs a date'
+  const n = Math.abs(days)
+  if (n === 1) return 'Late by 1 day'
+  return `Late by ${n} days`
+}
+
+function Notice({ paper, onOpen }) {
+  const title = paper.name || 'Untitled paper'
   return (
-    <li className={`ex-card ex-card-${bucket}`}>
-      <button type="button" className="ex-card-open" onClick={onOpen}>
-        <span className="ex-stamp">{dueLabel(paper.expires)}</span>
-        <strong>{paper.name || 'Untitled paper'}</strong>
-        <span className="ex-card-meta">
-          {paper.kind || 'paper'}
-          {paper.where ? ` · ${paper.where}` : ''}
-        </span>
+    <article className="ex-letter">
+      <button
+        type="button"
+        className="ex-letter-open"
+        onClick={onOpen}
+        aria-label={`Open ${title}, past due`}
+      >
+        <p className="ex-letter-mark">Renewal notice</p>
+        <p className="ex-stamp">Past due</p>
+        <p className="ex-good-thru">
+          <span>Good thru</span>
+          <strong>{formatMailerDate(paper.expires) || '—'}</strong>
+        </p>
+        <h2>{title}</h2>
+        {paper.ref ? <p className="ex-letter-ref">{paper.ref}</p> : null}
+        <p className="ex-letter-kind">{paper.kind || 'paper'}</p>
+        {paper.issuer ? <p className="ex-letter-call">Call {paper.issuer}</p> : null}
+        <p className="ex-letter-late">{lateLine(paper)}</p>
       </button>
-      <button type="button" className="ex-quiet" onClick={onRemove}>
-        Remove
-      </button>
-    </li>
+    </article>
+  )
+}
+
+function DueTable({ papers, onOpen }) {
+  return (
+    <ul className="ex-rows">
+      {papers.map((paper) => (
+        <li key={paper.id}>
+          <button type="button" className="ex-row" onClick={() => onOpen(paper.id)}>
+            <span className="ex-row-name">{paper.name || 'Untitled paper'}</span>
+            <span className="ex-row-kind">{paper.kind}</span>
+            <span className="ex-row-date">{formatExpire(paper.expires)}</span>
+            <span className="ex-row-wait">
+              {dueBucket(paper.expires) === 'soon' ? `${daysUntil(paper.expires)} days` : ''}
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
   )
 }

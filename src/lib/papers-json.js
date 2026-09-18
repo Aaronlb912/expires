@@ -55,25 +55,137 @@ export function dueLabel(expireValue, now = new Date()) {
   if (days === 0) return 'Due today'
   if (days === 1) return 'Due tomorrow'
   if (days <= 30) return `Due in ${days} days`
-  return parseExpire(expireValue).iso
+  return formatExpire(expireValue)
+}
+
+export function formatExpire(value) {
+  const parsed = parseExpire(value)
+  if (!parsed.ok) return ''
+  return parsed.date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
+const MAILER_MONTHS = [
+  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
+  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+]
+
+export function formatMailerDate(value) {
+  const parsed = parseExpire(value)
+  if (!parsed.ok) return ''
+  return `${MAILER_MONTHS[parsed.date.getMonth()]} ${parsed.date.getDate()}, ${parsed.date.getFullYear()}`
+}
+
+export function termMonthsOf(paper) {
+  const months = Number(paper && paper.termMonths)
+  if (!Number.isFinite(months) || months < 1) return 12
+  return Math.round(months)
+}
+
+export function addMonthsIso(expireValue, months) {
+  const parsed = parseExpire(expireValue)
+  if (!parsed.ok) return { ok: false, reason: parsed.reason }
+  const count = Number(months)
+  if (!Number.isFinite(count) || count < 1) return { ok: false, reason: 'junk' }
+  const src = parsed.date
+  const day = src.getDate()
+  const next = new Date(src.getFullYear(), src.getMonth() + Math.round(count), 1)
+  const last = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate()
+  next.setDate(Math.min(day, last))
+  return {
+    ok: true,
+    iso: `${next.getFullYear()}-${pad(next.getMonth() + 1)}-${pad(next.getDate())}`,
+  }
+}
+
+export function renewPaper(paper) {
+  const current = normalizePaper(paper)
+  const rolled = addMonthsIso(current.expires, termMonthsOf(current))
+  if (!rolled.ok) return rolled
+  return {
+    ok: true,
+    paper: {
+      ...current,
+      previousExpires: current.expires,
+      expires: rolled.iso,
+    },
+  }
+}
+
+function rankPaper(paper, now = new Date()) {
+  const days = daysUntil(paper.expires, now)
+  if (days == null) return -99999
+  return days
 }
 
 export function splitPapers(papers, now = new Date()) {
+  const late = []
   const soon = []
   const rest = []
   papers.forEach((paper) => {
     const bucket = dueBucket(paper.expires, now)
     if (bucket === 'later') rest.push(paper)
+    else if (bucket === 'late') late.push(paper)
     else soon.push(paper)
   })
-  function rank(paper) {
-    const days = daysUntil(paper.expires, now)
-    if (days == null) return -99999
-    return days
+  late.sort((left, right) => rankPaper(left, now) - rankPaper(right, now) || left.name.localeCompare(right.name))
+  soon.sort((left, right) => rankPaper(left, now) - rankPaper(right, now) || left.name.localeCompare(right.name))
+  rest.sort((left, right) => rankPaper(left, now) - rankPaper(right, now) || left.name.localeCompare(right.name))
+  return { late, soon, rest }
+}
+
+export function kindsFrom(papers) {
+  const seen = []
+  papers.forEach((paper) => {
+    const kind = String(paper.kind || '').trim()
+    if (!kind) return
+    if (seen.some((item) => item.toLowerCase() === kind.toLowerCase())) return
+    seen.push(kind)
+  })
+  return seen.sort((left, right) => left.localeCompare(right))
+}
+
+export function paperMatches(paper, query, kind) {
+  if (kind && String(paper.kind || '').toLowerCase() !== kind.toLowerCase()) {
+    return false
   }
-  soon.sort((left, right) => rank(left) - rank(right) || left.name.localeCompare(right.name))
-  rest.sort((left, right) => rank(left) - rank(right) || left.name.localeCompare(right.name))
-  return { soon, rest }
+  const needle = String(query || '').trim().toLowerCase()
+  if (!needle) return true
+  const hay = [paper.name, paper.kind, paper.where, paper.issuer, paper.notes]
+    .join(' ')
+    .toLowerCase()
+  return hay.includes(needle)
+}
+
+export function duplicatePaper(paper) {
+  const copy = normalizePaper(paper)
+  copy.id = newPaperId()
+  copy.name = copy.name ? `${copy.name} (copy)` : ''
+  return copy
+}
+
+export function parseBookText(text) {
+  try {
+    return { ok: true, book: normalizeBook(JSON.parse(text)) }
+  } catch {
+    return { ok: false, reason: 'junk' }
+  }
+}
+
+function asCost(value) {
+  if (value === '' || value == null) return ''
+  const n = Number(value)
+  if (Number.isFinite(n)) return n
+  return String(value).trim()
+}
+
+function dueWindowOf(value) {
+  const days = Number(value)
+  if (days === 14 || days === 60) return days
+  return 30
 }
 
 export function normalizePaper(paper, index = 0) {
@@ -85,7 +197,13 @@ export function normalizePaper(paper, index = 0) {
     kind: String(raw.kind ?? raw.type ?? '').trim(),
     expires: String(expires).trim(),
     where: String(raw.where ?? raw.location ?? raw.file ?? '').trim(),
+    issuer: String(raw.issuer ?? raw.who ?? raw.vendor ?? '').trim(),
     notes: String(raw.notes ?? '').trim(),
+    ref: String(raw.ref ?? raw.plate ?? raw.policy ?? '').trim(),
+    termMonths: termMonthsOf(raw),
+    previousExpires: String(raw.previousExpires ?? '').trim(),
+    holdUntil: String(raw.holdUntil ?? '').trim(),
+    cost: asCost(raw.cost),
   }
 }
 
@@ -96,7 +214,13 @@ export function blankPaper() {
     kind: '',
     expires: '',
     where: '',
+    issuer: '',
     notes: '',
+    ref: '',
+    termMonths: 12,
+    previousExpires: '',
+    holdUntil: '',
+    cost: '',
   }
 }
 
@@ -104,6 +228,7 @@ export function blankBook() {
   return {
     title: 'Papers',
     papers: [],
+    dueWindowDays: 30,
   }
 }
 
@@ -114,12 +239,14 @@ export function normalizeBook(data) {
     return {
       title: String(raw.title || '').trim() || 'Papers',
       papers: list.map((paper, index) => normalizePaper(paper, index)),
+      dueWindowDays: dueWindowOf(raw.dueWindowDays),
     }
   }
   if (raw.name || raw.expires || raw.expire || raw.date) {
     return {
       title: 'Papers',
       papers: [normalizePaper(raw, 0)],
+      dueWindowDays: 30,
     }
   }
   return blankBook()

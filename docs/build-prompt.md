@@ -5,7 +5,7 @@ See what is due in 30 days. Keep more than one paper. JSON in,
 JSON out. Drop `src/lib/` into a React app you already have.
 
 Prompt file (do not wait for a paste):
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-prompt.md`
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\draft-30-prompt.md`
 
 Continue later:
 `C:\Users\aaron\OneDrive\Documents\prompts\multi-session-build-prompt-react.md`
@@ -31,20 +31,33 @@ names. Email on `.example`.
 
 - [x] Session 1: scaffold, sample papers with dates, due in 30
       days, add a paper, JSON download, demo running.
-- [ ] Session 2: search, kinds, miss on a blank or junk date,
+- [x] Session 2: search, kinds, miss on a blank or junk date,
       persist, empty state.
-- [ ] Session 3: several books of papers or richer fields, CSS,
-      old JSON still loads.
+- [x] Session 3: richer fields, CSS, old JSON still loads.
+- [x] E-A. Mailer, not a card. Late paper is a letter.
+- [x] E-B. Renew. Roll `expires` by `termMonths`, write
+      `previousExpires`.
+- [ ] E-C. Ref. Plate / policy / domain. Notice + find.
+- [ ] E-D. Due window. 14 / 30 / 60 on the book.
+- [ ] E-E. Hold. `holdUntil` moves a late paper to Later.
+- [ ] E-F. Due list by kind when no chip is on.
+- [ ] E-G. Print this notice / due list. Chrome gone.
+- [ ] E-H. Keyboard. j/k or arrows. Enter opens.
+- [ ] E-I. Paper page is the notice. Cost optional.
+- [ ] E-J. Empty and late-where.
+- [ ] E-K. Application CSS. Mailer hierarchy. 390. Print.
 - [ ] Session ship: screenshots, demo video, README Demo, LinkedIn
       draft, SHIPPED.
 
 ## This session
 
-Session 1 done. List, add, open, miss, JSON, persist.
+E-A mailer letter. E-B Renew. Do not ship.
 
 ## Next session
 
-Session 2. Search, kinds, empty-state polish.
+Draft 30. Open this repo. Read
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\draft-30-prompt.md`.
+Next unchecked expires letter (E-C). Do not ship.
 
 ## Usefulness check
 

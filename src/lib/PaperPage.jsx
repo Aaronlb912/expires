@@ -1,14 +1,35 @@
 import { useEffect, useState } from 'react'
-import { normalizePaper, parseExpire } from './papers-json.js'
+import {
+  addMonthsIso,
+  daysUntil,
+  dueBucket,
+  formatExpire,
+  formatMailerDate,
+  normalizePaper,
+  parseExpire,
+  termMonthsOf,
+} from './papers-json.js'
 import './expires.css'
 
-export function PaperPage({ paper, mode, onSave, onCancel, onRemove }) {
+export function PaperPage({
+  paper,
+  mode,
+  kinds = [],
+  onSave,
+  onKeep,
+  onCancel,
+  onRemove,
+  onDuplicate,
+}) {
   const isNew = mode === 'new'
   const [name, setName] = useState(paper.name || '')
   const [kind, setKind] = useState(paper.kind || '')
   const [expires, setExpires] = useState(paper.expires || '')
   const [where, setWhere] = useState(paper.where || '')
+  const [issuer, setIssuer] = useState(paper.issuer || '')
   const [notes, setNotes] = useState(paper.notes || '')
+  const [termMonths, setTermMonths] = useState(String(termMonthsOf(paper)))
+  const [previousExpires, setPreviousExpires] = useState(paper.previousExpires || '')
   const [miss, setMiss] = useState('')
 
   useEffect(() => {
@@ -27,11 +48,11 @@ export function PaperPage({ paper, mode, onSave, onCancel, onRemove }) {
     }
     const parsed = parseExpire(expires)
     if (!parsed.ok && parsed.reason === 'blank') {
-      setMiss('Need an expire date (YYYY-MM-DD).')
+      setMiss('Need an expire date.')
       return
     }
     if (!parsed.ok) {
-      setMiss('That date is junk. Use YYYY-MM-DD.')
+      setMiss('Use a real date.')
       return
     }
     setMiss('')
@@ -41,17 +62,73 @@ export function PaperPage({ paper, mode, onSave, onCancel, onRemove }) {
       kind,
       expires: parsed.iso,
       where,
+      issuer,
       notes,
+      termMonths,
+      previousExpires,
     }))
   }
 
-  const heading = isNew ? 'New paper' : name.trim() || 'Untitled paper'
+  function renew() {
+    const parsed = parseExpire(expires)
+    if (!parsed.ok && parsed.reason === 'blank') {
+      setMiss('Need an expire date.')
+      return
+    }
+    if (!parsed.ok) {
+      setMiss('Use a real date.')
+      return
+    }
+    const months = termMonthsOf({ termMonths })
+    const rolled = addMonthsIso(parsed.iso, months)
+    if (!rolled.ok) {
+      setMiss('Use a real date.')
+      return
+    }
+    setMiss('')
+    setExpires(rolled.iso)
+    setPreviousExpires(parsed.iso)
+    setTermMonths(String(months))
+    if (!isNew && onKeep) {
+      onKeep(normalizePaper({
+        ...paper,
+        name,
+        kind,
+        expires: rolled.iso,
+        where,
+        issuer,
+        notes,
+        termMonths: months,
+        previousExpires: parsed.iso,
+      }))
+    }
+  }
+
+  const bucket = dueBucket(expires)
+  const days = daysUntil(expires)
 
   return (
     <div className="ex ex-page">
-      <p className="ex-kicker">{isNew ? 'Add a paper' : 'Open a paper'}</p>
-      <h1>{heading}</h1>
-      <p className="ex-note">Escape goes back without saving.</p>
+      <button type="button" className="ex-quiet ex-back" onClick={onCancel}>
+        All papers
+      </button>
+      <p className={`ex-page-flag ex-page-flag-${bucket}`}>
+        {bucket === 'late'
+          ? `${Math.abs(days)} days late`
+          : bucket === 'soon'
+            ? `Due in ${days} days`
+            : formatExpire(expires) || 'No date'}
+      </p>
+      <h1>{isNew ? 'New paper' : name.trim() || 'Untitled paper'}</h1>
+      {!isNew ? (
+        <p className="ex-good-thru ex-good-thru-page">
+          <span>Good thru</span>
+          <strong>{formatMailerDate(expires) || '—'}</strong>
+        </p>
+      ) : null}
+      {previousExpires ? (
+        <p className="ex-was-thru">Was good thru {formatMailerDate(previousExpires) || previousExpires}</p>
+      ) : null}
 
       {miss ? <p className="ex-miss" role="alert">{miss}</p> : null}
 
@@ -68,24 +145,45 @@ export function PaperPage({ paper, mode, onSave, onCancel, onRemove }) {
           <span>Kind</span>
           <input
             value={kind}
-            placeholder="warranty, plates, permit, insurance, domain"
+            list="ex-kinds-list"
             onChange={(event) => setKind(event.target.value)}
           />
+          {kinds.length > 0 ? (
+            <datalist id="ex-kinds-list">
+              {kinds.map((item) => (
+                <option key={item} value={item} />
+              ))}
+            </datalist>
+          ) : null}
         </label>
         <label className="ex-field">
           <span>Expire date</span>
           <input
+            type="date"
             value={expires}
-            placeholder="YYYY-MM-DD"
             onChange={(event) => setExpires(event.target.value)}
+          />
+        </label>
+        <label className="ex-field">
+          <span>Term (months)</span>
+          <input
+            inputMode="numeric"
+            value={termMonths}
+            onChange={(event) => setTermMonths(event.target.value)}
           />
         </label>
         <label className="ex-field">
           <span>Where it lives</span>
           <input
             value={where}
-            placeholder="Desk drawer, glove box, file cabinet"
             onChange={(event) => setWhere(event.target.value)}
+          />
+        </label>
+        <label className="ex-field">
+          <span>Who to call</span>
+          <input
+            value={issuer}
+            onChange={(event) => setIssuer(event.target.value)}
           />
         </label>
         <label className="ex-field">
@@ -96,12 +194,19 @@ export function PaperPage({ paper, mode, onSave, onCancel, onRemove }) {
             onChange={(event) => setNotes(event.target.value)}
           />
         </label>
-
         <div className="ex-actions">
           <button type="submit">Save</button>
+          <button type="button" className="ex-sheet" onClick={renew}>
+            Renew
+          </button>
           <button type="button" className="ex-secondary" onClick={onCancel}>
             Cancel
           </button>
+          {onDuplicate ? (
+            <button type="button" className="ex-secondary" onClick={onDuplicate}>
+              Duplicate
+            </button>
+          ) : null}
           {onRemove ? (
             <button type="button" className="ex-quiet" onClick={onRemove}>
               Remove

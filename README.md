@@ -23,6 +23,7 @@ npm start
 
 Open http://127.0.0.1:48417/
 
-Add a paper. Open one. Escape cancels. Quiet Remove has undo. A
-blank or junk date misses. Download JSON if you want a copy.
-Reset sample puts Pell Street back.
+Late papers sit on the desk as a mailed notice. Good thru is
+the date. Renew rolls the term. Due in 30 days is a list.
+Later stays folded. Add a paper. Open one. Download JSON
+from More.

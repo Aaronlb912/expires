@@ -11,3 +11,23 @@ List with due in 30 days first, then later. Add / open a paper
 Remove with undo. Miss on a blank or junk date. JSON download.
 Demo persist in localStorage. Reset sample on the list.
 Next session: Session 2. Search, kinds, empty-state polish.
+
+## 2026-09-18 - Session 2-3
+
+What runs: http://127.0.0.1:48417/
+What landed: Late papers in their own pile. Due in 30 days next.
+Find by name/kind/drawer. Kind chips. Who to call on a paper.
+Load JSON. Print. Duplicate. Rename the book. Start blank.
+Manila folder look. Old JSON without issuer still loads.
+Next session: Draft 30. E-A mailer CSS in
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\draft-30-prompt.md`.
+Do not ship.
+
+## 2026-09-18 - E-A / E-B
+
+What runs: http://127.0.0.1:48417/
+What landed: Late paper is a letter on the desk. PAST DUE
+stamp. Good thru in display type. Name, ref, kind, issuer,
+late-by. Open is the letter. Renew adds the term (default
+12) and keeps the previous date. Old JSON still loads.
+Next session: E-C Ref. Do not ship.
