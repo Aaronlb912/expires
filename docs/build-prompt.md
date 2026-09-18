@@ -5,7 +5,7 @@ See what is due in 30 days. Keep more than one paper. JSON in,
 JSON out. Drop `src/lib/` into a React app you already have.
 
 Prompt file (do not wait for a paste):
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-copy-prompt.md`
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-motion-prompt.md`
 
 Continue later:
 `C:\Users\aaron\OneDrive\Documents\prompts\multi-session-build-prompt-react.md`
@@ -58,15 +58,20 @@ names. Email on `.example`.
 - [x] C-2. How.
 - [x] C-3. Desk misses, File, empty states.
 - [x] C-4. README.
+- [x] M-0. TARGET points at the motion prompt.
+- [x] M-1. Tokens and reduced motion.
+- [x] M-2. Routes and landing letter.
+- [x] M-3. Desk letter, stamp, card, Later, miss.
+- [x] M-4. Walk it.
 
 ## This session
 
-Copy C-0 through C-4. Plainer sentences. Do not mark a
+Motion M-0 through M-4. Paper on a counter. Do not mark a
 second SHIPPED.
 
 ## Next session
 
-Copy is in. Do not start another product. Do not mark a
+Motion is in. Do not start another product. Do not mark a
 second SHIPPED unless he asks.
 
 ## Usefulness check

@@ -67,4 +67,11 @@ What landed: Plainer landing, sign in, How, File labels,
 and misses. Letter stamp unchanged. README matches.
 Do not mark a second SHIPPED.
 
+## 2026-09-18 - Motion M-0 to M-4
+
+What runs: http://127.0.0.1:48417/#/
+What landed: Page sit-down, late letter drop, stamp press,
+card sit, Later fold, miss fade. Reduced motion off. Print
+static. Do not mark a second SHIPPED.
+
 

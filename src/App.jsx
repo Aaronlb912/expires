@@ -73,18 +73,17 @@ export default function App() {
     go('/')
   }
 
+  let page = <Landing signedIn={session.open} />
   if (path === '/desk' && !session.open) {
-    return (
+    page = (
       <SignIn
         book={book}
         onBook={change}
         onSignedIn={signedIn}
       />
     )
-  }
-
-  if (path === '/desk') {
-    return (
+  } else if (path === '/desk') {
+    page = (
       <Workspace
         value={book}
         onChange={change}
@@ -92,10 +91,8 @@ export default function App() {
         onSignOut={signOut}
       />
     )
-  }
-
-  if (path === '/sign-in') {
-    return (
+  } else if (path === '/sign-in') {
+    page = (
       <SignIn
         book={book}
         signedIn={session.open}
@@ -103,11 +100,9 @@ export default function App() {
         onSignedIn={signedIn}
       />
     )
+  } else if (path === '/how') {
+    page = <How signedIn={session.open} />
   }
 
-  if (path === '/how') {
-    return <How signedIn={session.open} />
-  }
-
-  return <Landing signedIn={session.open} />
+  return <div key={path}>{page}</div>
 }

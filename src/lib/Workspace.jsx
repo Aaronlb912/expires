@@ -32,6 +32,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
   const [titleDraft, setTitleDraft] = useState(value.title)
   const [selectedId, setSelectedId] = useState('')
   const [printNotice, setPrintNotice] = useState(false)
+  const [mailIn, setMailIn] = useState(true)
 
   const open = value.papers.find((paper) => paper.id === openId) || null
   const kinds = kindsFrom(value.papers)
@@ -45,6 +46,11 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
       setSelectedId(queue[0] ? queue[0].id : '')
     }
   }, [selectedId, late, soon])
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setMailIn(false), 420)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     function onKey(event) {
@@ -359,7 +365,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
 
       <div className="ex-desk">
         {value.papers.length === 0 ? (
-          <article className="ex-letter">
+          <article className={mailIn ? 'ex-letter is-arriving' : 'ex-letter'}>
             <p className="ex-letter-mark">Renewal notice</p>
             <p className="ex-good-thru">
               <span>Good thru</span>
@@ -396,6 +402,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
                     key={paper.id}
                     paper={paper}
                     selected={paper.id === selectedId}
+                    arriving={mailIn}
                     onOpen={() => setOpenId(paper.id)}
                   />
                 ))}
@@ -405,7 +412,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
             ) : null}
 
             {soon.length > 0 ? (
-              <section className="ex-tray" aria-labelledby="ex-soon">
+              <section className="ex-tray is-swap" aria-labelledby="ex-soon" key={windowDays}>
                 <div className="ex-tray-head">
                   <h2 id="ex-soon">Due in {windowDays} days</h2>
                   <div className="ex-window" role="group" aria-label="Due window">
@@ -450,9 +457,14 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
                     Later ({rest.length})
                   </button>
                 </h2>
-                {showLater || filtering ? (
-                  <DueTray papers={rest} selectedId="" onOpen={setOpenId} />
-                ) : null}
+                <div
+                  className={showLater || filtering ? 'ex-later-body is-open' : 'ex-later-body'}
+                  aria-hidden={!(showLater || filtering)}
+                >
+                  <div className="ex-later-inner">
+                    <DueTray papers={rest} selectedId="" onOpen={setOpenId} />
+                  </div>
+                </div>
               </section>
             ) : null}
           </>
@@ -470,10 +482,13 @@ function lateLine(paper) {
   return `Late by ${n} days`
 }
 
-function Notice({ paper, selected, onOpen }) {
+function Notice({ paper, selected, arriving, onOpen }) {
   const title = paper.name || 'Untitled paper'
+  const classes = ['ex-letter']
+  if (selected) classes.push('is-selected')
+  if (arriving) classes.push('is-arriving')
   return (
-    <article className={selected ? 'ex-letter is-selected' : 'ex-letter'}>
+    <article className={classes.join(' ')}>
       <button
         type="button"
         className="ex-letter-open"

@@ -48,7 +48,7 @@ export function Landing({ signedIn }) {
         </div>
         {paper ? (
           <div className="ex-site-frame" aria-hidden="true">
-            <article className="ex-letter">
+            <article className="ex-letter is-arriving">
               <div className="ex-letter-open">
                 <p className="ex-letter-mark">Renewal notice</p>
                 <p className="ex-stamp">Past due</p>
