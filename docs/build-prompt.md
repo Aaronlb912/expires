@@ -5,7 +5,7 @@ See what is due in 30 days. Keep more than one paper. JSON in,
 JSON out. Drop `src/lib/` into a React app you already have.
 
 Prompt file (do not wait for a paste):
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-motion-prompt.md`
+`C:\Users\aaron\OneDrive\Documents\prompts\finished-product-prompt.md`
 
 Continue later:
 `C:\Users\aaron\OneDrive\Documents\prompts\multi-session-build-prompt-react.md`
@@ -63,16 +63,20 @@ names. Email on `.example`.
 - [x] M-2. Routes and landing letter.
 - [x] M-3. Desk letter, stamp, card, Later, miss.
 - [x] M-4. Walk it.
+- [x] F-0. TARGET points at the finished-product prompt.
+- [x] F-1. Look. Clerk desk. Late paper is a mailed notice.
+- [x] F-2. Pages. Land, open, How, desk. Hash routes. 390.
+- [x] F-3. Copy. Plain sentences. README matches.
+- [x] F-4. Motion. Letter, stamp, sit, Later fold. Reduced
+      motion. Print static.
 
 ## This session
 
-Motion M-0 through M-4. Paper on a counter. Do not mark a
-second SHIPPED.
+Close the ship. F-0 through F-4 already true. Mark SHIPPED.
 
 ## Next session
 
-Motion is in. Do not start another product. Do not mark a
-second SHIPPED unless he asks.
+None. This repo is shipped. Do not start another product here.
 
 ## Usefulness check
 
@@ -102,7 +106,8 @@ cancels. Quiet Remove. Old JSON still loads.
 
 ## SHIPPED means
 
-The desk already shipped 2026-09-18. This pass is pages around
-it. Do not mark a second SHIPPED unless he asks.
+Landing, local open, How, and the desk are in. Look, copy, and
+motion belong to this job. Stills, demo video, README player,
+Pages, and the hub card are in.
 
 SHIPPED 2026-09-18.

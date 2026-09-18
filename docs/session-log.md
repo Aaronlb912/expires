@@ -72,6 +72,14 @@ Do not mark a second SHIPPED.
 What runs: http://127.0.0.1:48417/#/
 What landed: Page sit-down, late letter drop, stamp press,
 card sit, Later fold, miss fade. Reduced motion off. Print
-static. Do not mark a second SHIPPED.
+static.
+
+## 2026-09-18 - SHIPPED (finished)
+
+What runs: http://127.0.0.1:48417/#/
+Hosted: https://aaronlb912.github.io/expires/
+What landed: F-0 through F-4 ticked. Unique desk, pages,
+plain copy, fitting motion. Stills, demo video, README
+player, Pages 200, hub card. SHIPPED.
 
 
