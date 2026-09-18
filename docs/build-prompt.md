@@ -1,11 +1,11 @@
-# TARGET 2026-09-17
+# TARGET 2026-09-18
 
 Papers that expire. Warranty, plates, permit, insurance, domain.
 See what is due in 30 days. Keep more than one paper. JSON in,
 JSON out. Drop `src/lib/` into a React app you already have.
 
 Prompt file (do not wait for a paste):
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-rebuild-prompt.md`
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-pages-prompt.md`
 
 Continue later:
 `C:\Users\aaron\OneDrive\Documents\prompts\multi-session-build-prompt-react.md`
@@ -17,12 +17,12 @@ Local URL: http://127.0.0.1:48417/
 Repo folder: `C:\Users\aaron\Documents\expires`
 
 Pages:
-- Paper list: due soon first, then the rest. Add a paper. Search
-  by name. Reset sample.
-- Paper page: name, kind, expire date, where the paper lives,
-  notes. Save. Escape cancels.
+- Landing `#/`
+- Sign in `#/sign-in` (local shop book, not an account)
+- How `#/how`
+- Desk `#/desk`
 
-Auth: none.
+Auth: none. Sign in is this browser opening a shop book.
 
 Sample: Pell Street Motors in `src/lib/sample-papers.js`. Fake
 names. Email on `.example`.
@@ -47,15 +47,22 @@ names. Email on `.example`.
 - [x] R-7. Application CSS. 390. Print.
 - [x] Session ship: screenshots, demo video, README Demo, LinkedIn
       draft, SHIPPED.
+- [x] P-0. TARGET points at the pages prompt.
+- [x] P-1. Hash router. Four views.
+- [x] P-2. Sign in. File How and Sign out.
+- [x] P-3. Landing.
+- [x] P-4. How.
+- [x] P-5. Walk it.
 
 ## This session
 
-Ship. Screenshots, demo video, README player URL, LinkedIn
-draft, Pages, hub if live. Mark SHIPPED.
+Pages P-0 through P-5. Front door around the shipped desk.
+Do not mark a second SHIPPED.
 
 ## Next session
 
-SHIPPED. Do not start another product in this repo.
+Pages are in. Do not start another product. Do not mark a
+second SHIPPED unless he asks.
 
 ## Usefulness check
 
@@ -65,28 +72,27 @@ SHIPPED. Do not start another product in this repo.
 2. Their data? Yes. Pass a book of papers, or load JSON.
 3. Make it theirs? Yes. Title, kinds, CSS in `src/lib/expires.css`.
 4. Take it? Yes. Copy `src/lib/` into their React `src/`.
-5. No account? Yes. No signup. No npm publish.
+5. No account? Yes. No signup. No npm publish. Sign in is local.
 6. Coworker test? Yes. Zip `src/lib/`. They import it.
 7. Keep a copy? Yes. Download JSON. The page in their app with
    their dates.
 8. Miss and recover? Yes. Blank date. Junk date. Empty book.
-9. README says how? Yes. Who, run, local URL, copy `src/lib/`,
-   import, props, three stills, player URL.
+   Empty shop name on sign in.
+9. README says how? Yes. Who, run, local URL, hash routes, copy
+   `src/lib/`, import, props, three stills, player URL.
 
 ## Go deep (done-means)
 
-A person can add, open, edit, and remove their own papers. A paper
-has more than a title (kind, date, where it lives). Sample or
-blank. Work stays after a refresh in the demo. JSON download
+A person can land, open a shop book, read How, and use the desk.
+A paper has more than a title (kind, date, where it lives). Sample
+or blank. Work stays after a refresh in the demo. JSON download
 works. Host apps get `value` / `onChange`. Due in 30 days is
 obvious. A miss is recoverable. `src/lib/` copies in. Escape
 cancels. Quiet Remove. Old JSON still loads.
 
 ## SHIPPED means
 
-Session plan checked. Usefulness 1-9 all yes. README has copy
-`src/lib/`, import, props, three tool screenshots, and a
-github.com player URL. Log marked SHIPPED. Do not SHIPPED until
-screenshots and video. No second product in this repo.
+The desk already shipped 2026-09-18. This pass is pages around
+it. Do not mark a second SHIPPED unless he asks.
 
 SHIPPED 2026-09-18.

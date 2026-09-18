@@ -52,3 +52,12 @@ the term. Hold, find, cost miss, blank notice. Demo video
 Repo https://github.com/Aaronlb912/expires
 SHIPPED.
 
+## 2026-09-18 - Pages P-0 to P-5
+
+What runs: http://127.0.0.1:48417/#/
+What landed: Landing, sign in, How, desk. Hash routes.
+Sign in is a local shop book. File has How and Sign out.
+Empty shop name misses. Pell Street opens the desk.
+Do not mark a second SHIPPED.
+
+

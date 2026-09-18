@@ -48,6 +48,16 @@ npm start
 
 Open http://127.0.0.1:48417/
 
+The demo site:
+
+- Landing: http://127.0.0.1:48417/#/
+- Sign in: http://127.0.0.1:48417/#/sign-in
+- How: http://127.0.0.1:48417/#/how
+- Desk: http://127.0.0.1:48417/#/desk
+
+Sign in is this browser opening a shop book. No email. Hosted
+copy: https://aaronlb912.github.io/expires/
+
 Files: https://github.com/Aaronlb912/expires
 
 ## Demo

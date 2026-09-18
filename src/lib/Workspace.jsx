@@ -17,7 +17,7 @@ import {
 } from './papers-json.js'
 import './expires.css'
 
-export function Workspace({ value, onChange }) {
+export function Workspace({ value, onChange, onHow, onSignOut }) {
   const undoTimer = useRef(null)
   const fileRef = useRef(null)
   const searchRef = useRef(null)
@@ -293,6 +293,16 @@ export function Workspace({ value, onChange }) {
             <button type="button" className="ex-quiet" onClick={resetSample}>
               Reset sample
             </button>
+            {onHow ? (
+              <button type="button" className="ex-quiet" onClick={onHow}>
+                How it works
+              </button>
+            ) : null}
+            {onSignOut ? (
+              <button type="button" className="ex-quiet" onClick={onSignOut}>
+                Sign out
+              </button>
+            ) : null}
           </div>
         </details>
         <input
