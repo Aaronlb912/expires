@@ -60,4 +60,11 @@ Sign in is a local shop book. File has How and Sign out.
 Empty shop name misses. Pell Street opens the desk.
 Do not mark a second SHIPPED.
 
+## 2026-09-18 - Copy C-0 to C-4
+
+What runs: http://127.0.0.1:48417/#/
+What landed: Plainer landing, sign in, How, File labels,
+and misses. Letter stamp unchanged. README matches.
+Do not mark a second SHIPPED.
+
 

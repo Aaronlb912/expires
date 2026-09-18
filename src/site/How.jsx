@@ -8,15 +8,37 @@ export function How({ signedIn }) {
         <h1>Expires</h1>
       </header>
       <div className="ex-site-body">
-        <h2 className="ex-site-title">How it works</h2>
+        <h2 className="ex-site-title">How this works</h2>
         <ol className="ex-site-how">
-          <li>Late papers sit as a mailed notice. Good thru is the date.</li>
-          <li>The tray is what is due in 14, 30, or 60 days. Later is folded.</li>
-          <li>Open a paper. Renew rolls the term and keeps the old date.</li>
-          <li>Hold a late paper until a day and it leaves the late pile.</li>
-          <li>Find matches the name or the plate.</li>
-          <li>Download JSON if you want a file. Old JSON still loads.</li>
-          <li>Print the notice or the due tray.</li>
+          <li>
+            If a paper is already past its date, it sits here like
+            a notice in the mail. The big date is when it was good
+            through.
+          </li>
+          <li>
+            Under that is what is coming due. You can look 14, 30,
+            or 60 days ahead. Older papers are under Later, folded
+            up so they are not in the way.
+          </li>
+          <li>
+            Click a paper to open it. Renew moves the date forward
+            by the usual term (a year, unless you change it) and
+            keeps the old date on the card so you can see what it
+            used to be.
+          </li>
+          <li>
+            If a late paper is not your problem this week, set Hold
+            until a day. Until then it waits under Later.
+          </li>
+          <li>Find looks at the name, the plate, or the policy number.</li>
+          <li>
+            You can download a file of the list, or open one you
+            saved. Older files still work.
+          </li>
+          <li>
+            Print the late notice, or print the due list. The menus
+            hide so you get the paper, not the extra buttons.
+          </li>
         </ol>
         <div className="ex-site-actions">
           <button
@@ -24,7 +46,7 @@ export function How({ signedIn }) {
             className="ex-primary"
             onClick={() => go(signedIn ? '/desk' : '/sign-in')}
           >
-            Open the desk
+            Open your list
           </button>
           <button type="button" className="ex-quiet" onClick={() => go('/')}>
             Back

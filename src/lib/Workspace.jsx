@@ -193,7 +193,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
     reader.onload = () => {
       const parsed = parseBookText(String(reader.result || ''))
       if (!parsed.ok) {
-        setLoadMiss('That file is not a papers JSON.')
+        setLoadMiss('That file is not a saved list we can open.')
         return
       }
       setLoadMiss('')
@@ -213,7 +213,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
         <header className="ex-bar">
           <h1>{value.title}</h1>
           <button type="button" className="ex-quiet ex-bar-back" onClick={cancelPaper}>
-            Back to desk
+            Back to your list
           </button>
         </header>
         <PaperPage
@@ -275,27 +275,27 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
           <summary>File</summary>
           <div className="ex-file-panel">
             <button type="button" className="ex-quiet" onClick={printDesk}>
-              Print due tray
+              Print the due list
             </button>
             <button type="button" className="ex-quiet" onClick={() => downloadBook(value)}>
-              Download JSON
+              Download a file
             </button>
             <button
               type="button"
               className="ex-quiet"
               onClick={() => fileRef.current && fileRef.current.click()}
             >
-              Load JSON
+              Open a saved file
             </button>
             <button type="button" className="ex-quiet" onClick={startBlank}>
-              Start blank
+              Start with an empty list
             </button>
             <button type="button" className="ex-quiet" onClick={resetSample}>
-              Reset sample
+              Load the sample again
             </button>
             {onHow ? (
               <button type="button" className="ex-quiet" onClick={onHow}>
-                How it works
+                How this works
               </button>
             ) : null}
             {onSignOut ? (
@@ -320,7 +320,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
           className="ex-find"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Find name, plate, policy"
+          placeholder="Name, plate, or policy"
           aria-label="Find"
         />
         {kinds.length > 0 ? (
@@ -366,7 +366,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
               <strong>—</strong>
             </p>
             <h2>Blank notice</h2>
-            <p className="ex-letter-call">Add a paper when you have a date.</p>
+            <p className="ex-letter-call">Nothing here yet. Add a paper when you have a date.</p>
             <div className="ex-letter-actions">
               <button type="button" className="ex-primary" onClick={addPaper}>
                 Add paper
@@ -375,7 +375,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
           </article>
         ) : filteredEmpty ? (
           <div className="ex-empty">
-            <p>Nothing matches.</p>
+            <p>Nothing matches that search.</p>
             <button
               type="button"
               className="ex-secondary"
@@ -401,7 +401,7 @@ export function Workspace({ value, onChange, onHow, onSignOut }) {
                 ))}
               </section>
             ) : !filtering ? (
-              <p className="ex-all-clear">Nothing late.</p>
+              <p className="ex-all-clear">Nothing is late right now.</p>
             ) : null}
 
             {soon.length > 0 ? (

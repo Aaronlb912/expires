@@ -29,7 +29,7 @@ export function SignIn({ book, signedIn, onBook, onSignedIn }) {
   function openNamed() {
     const name = shop.trim()
     if (!name) {
-      setMiss('Name the shop.')
+      setMiss('Please type a name for this list.')
       return
     }
     if (!checkPin(name)) return
@@ -62,7 +62,7 @@ export function SignIn({ book, signedIn, onBook, onSignedIn }) {
   function startBlank() {
     const name = shop.trim()
     if (!name) {
-      setMiss('Name the shop.')
+      setMiss('Please type a name for this list.')
       return
     }
     savePin(name, pin)
@@ -75,8 +75,12 @@ export function SignIn({ book, signedIn, onBook, onSignedIn }) {
         <h1>Expires</h1>
       </header>
       <div className="ex-site-body">
-        <h2 className="ex-site-title">Open a shop book</h2>
-        <p className="ex-site-lede">This browser only. No email. No account.</p>
+        <h2 className="ex-site-title">Open your list</h2>
+        <p className="ex-site-lede">
+          This stays in this browser. There is no sign-up and no
+          email. Name the shop or household so you can find it
+          again.
+        </p>
         <form
           className="ex-site-form"
           onSubmit={(event) => {
@@ -85,7 +89,7 @@ export function SignIn({ book, signedIn, onBook, onSignedIn }) {
           }}
         >
           <label>
-            <span>Shop name</span>
+            <span>Shop or household name</span>
             <input
               value={shop}
               onChange={(event) => setShop(event.target.value)}
@@ -93,7 +97,7 @@ export function SignIn({ book, signedIn, onBook, onSignedIn }) {
             />
           </label>
           <label>
-            <span>PIN (optional)</span>
+            <span>PIN (optional, this computer only)</span>
             <input
               type="password"
               value={pin}
@@ -108,20 +112,20 @@ export function SignIn({ book, signedIn, onBook, onSignedIn }) {
           ) : null}
           <div className="ex-site-actions">
             <button type="submit" className="ex-primary">
-              Open desk
+              Open this list
             </button>
             <button type="button" className="ex-secondary" onClick={openPell}>
-              Open Pell Street Motors
+              Open the Pell Street Motors sample
             </button>
             <button type="button" className="ex-quiet" onClick={startBlank}>
-              Start blank
+              Start with an empty list
             </button>
           </div>
         </form>
         {signedIn ? (
           <p className="ex-site-resume">
             <button type="button" className="ex-quiet" onClick={() => go('/desk')}>
-              Back to desk
+              Back to your list
             </button>
           </p>
         ) : null}

@@ -28,20 +28,22 @@ export function Landing({ signedIn }) {
       </header>
       <div className="ex-site-body">
         <p className="ex-site-lede">
-          Papers that die on a date. Late ones show up as a mailed notice.
+          This keeps a list of plates, insurance, permits, and
+          other papers that run out on a date. If one is already
+          late, it shows up like a notice in the mail.
         </p>
         <div className="ex-site-actions">
           {signedIn ? (
             <button type="button" className="ex-primary" onClick={() => go('/desk')}>
-              Back to the desk
+              Back to your list
             </button>
           ) : (
             <button type="button" className="ex-primary" onClick={() => go('/sign-in')}>
-              Open the desk
+              Open your list
             </button>
           )}
           <button type="button" className="ex-quiet" onClick={() => go('/how')}>
-            How it works
+            How this works
           </button>
         </div>
         {paper ? (

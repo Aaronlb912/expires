@@ -65,18 +65,18 @@ export function PaperPage({
   function save(event) {
     event.preventDefault()
     if (!name.trim()) {
-      setMiss('Need a name.')
+      setMiss('Please type a name.')
       setMissField('name')
       return
     }
     const parsed = parseExpire(expires)
     if (!parsed.ok && parsed.reason === 'blank') {
-      setMiss('Need an expire date.')
+      setMiss('Please pick the date it runs out.')
       setMissField('expires')
       return
     }
     if (!parsed.ok) {
-      setMiss('Use a real date.')
+      setMiss('That does not look like a real date.')
       setMissField('expires')
       return
     }
@@ -106,19 +106,19 @@ export function PaperPage({
   function renew() {
     const parsed = parseExpire(expires)
     if (!parsed.ok && parsed.reason === 'blank') {
-      setMiss('Need an expire date.')
+      setMiss('Please pick the date it runs out.')
       setMissField('expires')
       return
     }
     if (!parsed.ok) {
-      setMiss('Use a real date.')
+      setMiss('That does not look like a real date.')
       setMissField('expires')
       return
     }
     const months = termMonthsOf({ termMonths })
     const rolled = addMonthsIso(parsed.iso, months)
     if (!rolled.ok) {
-      setMiss('Use a real date.')
+      setMiss('That does not look like a real date.')
       setMissField('expires')
       return
     }
@@ -146,7 +146,7 @@ export function PaperPage({
     <div className="ex-card">
       <div className="ex-card-nav">
         <button type="button" className="ex-quiet" onClick={onCancel}>
-          Back to desk
+          Back to your list
         </button>
         {onPrint && !isNew ? (
           <button type="button" className="ex-quiet" onClick={onPrint}>

@@ -1,43 +1,46 @@
 # Expires
 
-Papers that die on a date. Warranty, plates, permit, insurance,
-domain. See what is due. Late papers show up as a mailed notice.
-Drop `src/lib/` into a React app you already have.
+This keeps a list of plates, insurance, permits, and other
+papers that run out on a date. If one is already late, it
+shows up like a notice in the mail. Drop `src/lib/` into a
+React app you already have.
 
 The sample is Pell Street Motors. Names are fake. Emails end in
 `.example`.
 
 ## Who it is for
 
-A shop or household that already runs React and has a few papers
-with an expire date. They finish "what is due, and where is the
-paper."
+A shop or household that already runs React and has a few
+papers with an end date. They want to see what is due and
+where the paper lives.
 
 ## What you get
 
 Copy `src/lib/`. That folder is the component.
 
-- `Workspace.jsx` - the clerk desk plus the open paper
+- `Workspace.jsx` - the list plus the open paper
 - `PaperPage.jsx` - add a paper and edit one
 - `expires.css` - the look
 - `papers-json.js` - dates, due piles, download, load parse
 - `sample-papers.js` - Pell Street Motors sample
 - `index.js` - the import
 
-No account. Nothing sends mail. Host apps pass `value` and
-`onChange`. The demo keeps the book in the browser. Reset sample
-if you want Pell Street back. Old JSON with `{ id, name, kind,
-expires, where }` still loads.
+There is no account and nothing sends mail. Host apps pass
+`value` and `onChange`. The demo keeps the list in this
+browser. Load the sample again if you want Pell Street back.
+Older files with `{ id, name, kind, expires, where }` still
+open.
 
-Late papers sit as a mailed notice. Good thru is the date. The
-due tray is date-first and grouped by kind. Set 14, 30, or 60
-days. Later stays folded. Open a paper for the registration
-card. Renew rolls the term and keeps the previous date. Hold a
-late paper until a day and it leaves the late pile. Find matches
-the name or the plate. A blank date or a junk cost misses.
-Escape cancels. Quiet Remove with undo. Print the notice or the
-due tray. j and k move through late then soon. Enter opens.
-n adds. / finds.
+Late papers sit like a mailed notice. The big date is when it
+was good through. Coming-due papers are listed by date and
+grouped by kind. You can look 14, 30, or 60 days ahead. Later
+stays folded. Open a paper to edit it. Renew moves the date
+forward and keeps the old one on the card. Hold a late paper
+until a day and it leaves the late pile. Find matches the
+name or the plate. A blank date or a junk cost misses.
+Escape cancels. Quiet Remove with undo. Print the notice or
+the due list. j and k move through late then soon. Enter
+opens. n adds. / finds.
 
 ## Run the demo
 
@@ -55,8 +58,8 @@ The demo site:
 - How: http://127.0.0.1:48417/#/how
 - Desk: http://127.0.0.1:48417/#/desk
 
-Sign in is this browser opening a shop book. No email. Hosted
-copy: https://aaronlb912.github.io/expires/
+Sign in names the list this browser will keep. There is no
+email. Hosted copy: https://aaronlb912.github.io/expires/
 
 Files: https://github.com/Aaronlb912/expires
 

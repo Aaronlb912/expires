@@ -5,7 +5,7 @@ See what is due in 30 days. Keep more than one paper. JSON in,
 JSON out. Drop `src/lib/` into a React app you already have.
 
 Prompt file (do not wait for a paste):
-`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-pages-prompt.md`
+`C:\Users\aaron\OneDrive\Documents\prompts\other prompts\expires-copy-prompt.md`
 
 Continue later:
 `C:\Users\aaron\OneDrive\Documents\prompts\multi-session-build-prompt-react.md`
@@ -53,15 +53,20 @@ names. Email on `.example`.
 - [x] P-3. Landing.
 - [x] P-4. How.
 - [x] P-5. Walk it.
+- [x] C-0. TARGET points at the copy prompt.
+- [x] C-1. Landing and sign in.
+- [x] C-2. How.
+- [x] C-3. Desk misses, File, empty states.
+- [x] C-4. README.
 
 ## This session
 
-Pages P-0 through P-5. Front door around the shipped desk.
-Do not mark a second SHIPPED.
+Copy C-0 through C-4. Plainer sentences. Do not mark a
+second SHIPPED.
 
 ## Next session
 
-Pages are in. Do not start another product. Do not mark a
+Copy is in. Do not start another product. Do not mark a
 second SHIPPED unless he asks.
 
 ## Usefulness check
