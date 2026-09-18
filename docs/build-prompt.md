@@ -45,18 +45,17 @@ names. Email on `.example`.
 - [x] R-5. Hold, empty, late-where.
 - [x] R-6. Keyboard and print.
 - [x] R-7. Application CSS. 390. Print.
-- [ ] Session ship: screenshots, demo video, README Demo, LinkedIn
+- [x] Session ship: screenshots, demo video, README Demo, LinkedIn
       draft, SHIPPED.
 
 ## This session
 
-Rebuild R-0 through R-7. Clerk shell, late letter kept.
-Do not ship.
+Ship. Screenshots, demo video, README player URL, LinkedIn
+draft, Pages, hub if live. Mark SHIPPED.
 
 ## Next session
 
-Rebuild letters are done. Ship later only when he asks.
-Do not start the video. Do not mark SHIPPED.
+SHIPPED. Do not start another product in this repo.
 
 ## Usefulness check
 
@@ -71,8 +70,8 @@ Do not start the video. Do not mark SHIPPED.
 7. Keep a copy? Yes. Download JSON. The page in their app with
    their dates.
 8. Miss and recover? Yes. Blank date. Junk date. Empty book.
-9. README says how? Session 1: who, run, local URL. Full copy
-   `src/lib/` before SHIPPED.
+9. README says how? Yes. Who, run, local URL, copy `src/lib/`,
+   import, props, three stills, player URL.
 
 ## Go deep (done-means)
 
@@ -89,3 +88,5 @@ Session plan checked. Usefulness 1-9 all yes. README has copy
 `src/lib/`, import, props, three tool screenshots, and a
 github.com player URL. Log marked SHIPPED. Do not SHIPPED until
 screenshots and video. No second product in this repo.
+
+SHIPPED 2026-09-18.

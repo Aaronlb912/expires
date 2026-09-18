@@ -41,3 +41,14 @@ kind. 14 / 30 / 60. Later folded. Open paper is a registration
 card. Renew, hold, ref find, cost miss, blank notice. j/k and
 print hide chrome. 390 keeps the date.
 Next session: ready for ship later. Do not ship from this prompt.
+
+## 2026-09-18 - SHIPPED
+
+What runs: http://127.0.0.1:48417/
+Hosted: https://aaronlb912.github.io/expires/
+What landed: Clerk desk plus mailed late notice. Renew rolls
+the term. Hold, find, cost miss, blank notice. Demo video
+(Andrew Neural, Wallpaper). README stills and player URL.
+Repo https://github.com/Aaronlb912/expires
+SHIPPED.
+
